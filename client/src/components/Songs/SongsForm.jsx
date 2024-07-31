@@ -1,6 +1,7 @@
 import{useState, useEffect} from 'react';
 import axios from 'axios';
 import { useParams} from 'react-router-dom';
+import { addComment } from '../../services/services'
 
 
 
@@ -9,9 +10,9 @@ const [formValues, setFormValues] = useState({title:"", author:"", classificatio
 const [song, setSong] = useState ({});
 const {_id}= useParams();
 
-useEffect (() =>{
-if (_id){}
-},[_id])
+// useEffect (() =>{
+// if (_id){}
+// },[_id])
 
 const handleChange = (e) => {
     const {value,name} = e.target;
@@ -24,13 +25,7 @@ let newComment = {autor: formValues.author, review: formValues.classification, c
 
 
 if(_id){
-    try {
-        const response = await axios.post ("http://localhost:8080/song/create", newSong);
-        console.log(response);
-        
-    } catch (error) {
-        console.log(error);
-    } 
+    addComment(_id, newComment)
 }
 else {let newSong = {title: formValues.title, comentarios: newComment}
 try {
@@ -41,12 +36,16 @@ try {
     console.log(error);
 }}
 
+setFormValues({title:"", author:"", classification:"", comments:""})
+
 }
     return(
         <>
    <h2> Agregar Cancion </h2>
             <form onSubmit={handleSubmit}>
                 <div>
+                    {_id ? null : 
+                    <>
                     <label htmlFor="title">
                         Title:
                     </label>
@@ -55,6 +54,8 @@ try {
                            name="title"
                            value={formValues.title}
                            onChange={(e) => handleChange(e)} />
+                    </>
+                    }
                 </div>
                 <div>
                     <label htmlFor="author">

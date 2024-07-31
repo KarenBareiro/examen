@@ -2,10 +2,6 @@ const Cancion = require ('../models/cancionModels')
 
 // Función para crear un nuevo chiste
 module.exports.createSong = async (req, res) => {
-    // const cancion = new Cancion ({ // Creamos una nueva instancia de Joke con los datos recibidos en el cuerpo de la solicitud (req.body)
-    //   title: req.body.joke,
-    // });
-  
     try {
       const newSong = await Cancion.create(req.body); // Guardamos el nuevo chiste en la base de datos
       res.status(201).json(newSong); // Devolvemos el chiste creado como respuesta con estado 201 (creado) en formato JSON
@@ -22,7 +18,7 @@ module.exports.createSong = async (req, res) => {
             res.statusMessage = 'Cancion no encontrada.';
             return res.status(404).json({mensaje: 'Cancion no encontrada.'});
         }
-        const foundSong = await Cancion.findOneAndUpdate({_id: req.params.id}, {$push: {comentarios: req.body.comentario}}, {new: true})
+        const foundSong = await Cancion.findOneAndUpdate({_id: req.params.id}, {$push: {comentarios: req.body}}, {new: true})
         res.json(foundSong);
     } catch (error) {
         res.status(400).json({ message: error.message });
